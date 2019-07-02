@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'cfn-nag/custom_rules/base'
+require 'cfn-nag/violation'
+require_relative 'base'
 
 class ExampleCustomRule < BaseRule
   def rule_text
