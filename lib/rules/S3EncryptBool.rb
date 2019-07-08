@@ -1,25 +1,25 @@
+# frozen_string_literal: true
+
 require 'cfn-nag/violation'
-require_relative 'boolean_base_rule'
+require_relative 'base'
 
-class ElasticIPNotAllowedRule < BooleanBaseRule
-
+class IamPolicyforS3Encryption < BaseRule
   def rule_text
-    'Elastic IP should not be assigned'
+    'IamPolicyforS3Encryption'
   end
 
   def rule_type
-    Violation::FAILING_VIOLATION
+    Violation::WARNING
   end
 
   def rule_id
-    'WU11111'
+    'T16'
   end
 
-  def resource_type
-    ''AWS::IAM::Policy'
-  end
-
-  def boolean_property
-    :AES256
+  def audit_impl(cfn_model)
+    violating_policies = cfn_model.resources_by_type('AWS::IAM::Policy').select do |policy|
+    !policy.policy_document.condition.string_not_equals == 'x-amz-server-side-encryption: AES256'
+end
+    violating_policies.map(&:logical_resource_id)
   end
 end
