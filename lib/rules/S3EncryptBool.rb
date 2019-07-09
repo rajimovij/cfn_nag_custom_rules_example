@@ -18,7 +18,7 @@ class S3BucketEncryptionViolationRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_buckets = cfn_model.resources_by_type('AWS::S3::Bucket').select do |bucket|
-      bucket.BucketEncryption.nil?
+      not_truthy?(bucket.BucketEncryption)
     end
 
     violating_buckets.map(&:logical_resource_id)
