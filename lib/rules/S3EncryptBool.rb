@@ -21,6 +21,6 @@ class EFSFileSystemEncryptedRule < BooleanBaseRule
   end
 
   def boolean_property
-    :BucketEncryption
+    :SSEAlgorithm
   end
 end
