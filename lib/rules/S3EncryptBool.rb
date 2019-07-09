@@ -1,26 +1,26 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require_relative 'base'
+require_relative 'boolean_base_rule'
 
-class S3BucketEncryptionViolationRule < BaseRule
+class EFSFileSystemEncryptedRule < BooleanBaseRule
   def rule_text
-    'S3 Bucket should have encryption configured'
+    'S3 should have encryption enabled'
   end
 
   def rule_type
-    Violation::WARNING
+    Violation::FAILING_VIOLATION
   end
 
   def rule_id
-    'T35'
+    'T32'
   end
 
-  def audit_impl(cfn_model)
-    violating_buckets = cfn_model.resources_by_type('AWS::S3::Bucket').select do |bucket|
-      not_truthy?(bucket.BucketEncryption)
-    end
+  def resource_type
+    'AWS::S3::Bucket'
+  end
 
-    violating_buckets.map(&:logical_resource_id)
+  def boolean_property
+    :BucketEncryption
   end
 end
